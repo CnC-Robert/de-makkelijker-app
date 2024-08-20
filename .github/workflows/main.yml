@@ -1,0 +1,43 @@
+name: Build and Package Electron App
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the Electron app
+        run: npm run build
+
+      - name: Package the Electron app
+        run: |
+          npx electron-builder --linux --win --mac
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: electron-app
+          path: dist/
