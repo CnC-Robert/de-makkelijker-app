@@ -30,14 +30,13 @@ jobs:
         run: npm install
 
       - name: Build the Electron app
-        run: npm run build
+        run: npm run make
 
-      - name: Package the Electron app
-        run: |
-          npx electron-builder --linux --win --mac
+#      - name: Package the Electron app using Electron Forge
+#        run: npx electron-forge make
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: electron-app
-          path: dist/
+          path: out/make/
